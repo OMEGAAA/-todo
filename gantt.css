@@ -1,0 +1,322 @@
+/* ========== ガントチャートビュー ========== */
+#gantt-view {
+  overflow: hidden;
+}
+
+.gantt-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* タスク名列（固定） */
+.gantt-task-col {
+  width: var(--gantt-task-col-width);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+  z-index: 10;
+}
+
+.gantt-task-col-header {
+  height: var(--gantt-header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.gantt-task-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* スクロールバーを非表示（gantt-scroll-areaと同期） */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.gantt-task-list::-webkit-scrollbar {
+  display: none;
+}
+
+.gantt-task-item {
+  height: var(--gantt-row-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-2);
+  transition: background var(--transition-fast);
+}
+
+.gantt-task-item:hover {
+  background: var(--color-surface-2);
+}
+
+.gantt-task-actions {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.gantt-task-item:hover .gantt-task-actions {
+  opacity: 1;
+}
+
+.gantt-task-name {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gantt-task-name.completed {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+/* スクロール可能エリア */
+.gantt-scroll-area {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+.gantt-grid {
+  position: relative;
+  min-height: 100%;
+}
+
+/* 日付ヘッダー */
+.gantt-date-header {
+  height: var(--gantt-header-height);
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.gantt-month-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 22px;
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.gantt-month-cell {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  border-right: 1px solid var(--color-border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.gantt-day-row {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+}
+
+.gantt-day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  border-right: 1px solid var(--color-border);
+  position: relative;
+}
+
+.gantt-day-cell.weekend {
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.gantt-day-cell.today {
+  background: rgba(79, 110, 247, 0.08);
+}
+
+.gantt-day-cell.today .gantt-day-num {
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-full);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+}
+
+.gantt-day-num {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.gantt-day-name {
+  font-size: 9px;
+  color: var(--color-text-muted);
+}
+
+.gantt-day-cell.weekend .gantt-day-name {
+  color: var(--color-danger);
+}
+
+/* ガントチャート本体グリッド */
+.gantt-body {
+  position: relative;
+}
+
+.gantt-row {
+  height: var(--gantt-row-height);
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+  align-items: center;
+}
+
+.gantt-row:hover {
+  background: rgba(79, 110, 247, 0.02);
+}
+
+.gantt-cell {
+  flex-shrink: 0;
+  height: 100%;
+  border-right: 1px solid var(--color-border);
+}
+
+.gantt-cell.weekend {
+  background: rgba(148, 163, 184, 0.04);
+}
+
+.gantt-cell.today-col {
+  background: rgba(79, 110, 247, 0.05);
+}
+
+/* 今日の縦線 */
+.gantt-today-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-primary);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.gantt-today-line::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+}
+
+/* タスクバー */
+.gantt-bar-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.gantt-bar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 26px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), filter var(--transition-fast);
+  min-width: 4px;
+}
+
+.gantt-bar:hover {
+  filter: brightness(1.1);
+  z-index: 2;
+}
+
+/* ステータス × 優先度 バーカラー */
+.gantt-bar.high.not-started   { background: var(--bar-high-not-started); }
+.gantt-bar.high.in-progress   { background: var(--bar-high-in-progress); }
+.gantt-bar.high.completed     { background: var(--bar-high-completed); opacity: 0.7; }
+.gantt-bar.medium.not-started { background: var(--bar-medium-not-started); }
+.gantt-bar.medium.in-progress { background: var(--bar-medium-in-progress); }
+.gantt-bar.medium.completed   { background: var(--bar-medium-completed); opacity: 0.7; }
+.gantt-bar.low.not-started    { background: var(--bar-low-not-started); }
+.gantt-bar.low.in-progress    { background: var(--bar-low-in-progress); }
+.gantt-bar.low.completed      { background: var(--bar-low-completed); opacity: 0.7; }
+
+.gantt-bar.completed {
+  text-decoration: line-through;
+}
+
+/* バーのポップオーバー */
+.gantt-bar-popup {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: var(--color-text-primary);
+  color: #fff;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  z-index: 100;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  display: none;
+}
+
+.gantt-bar:hover .gantt-bar-popup {
+  display: block;
+}
+
+/* 空行（フィルタで全タスク非表示時） */
+.gantt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-text-muted);
+  gap: var(--space-2);
+}

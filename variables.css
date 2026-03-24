@@ -1,0 +1,101 @@
+:root {
+  /* カラーパレット */
+  --color-primary:        #4F6EF7;
+  --color-primary-light:  #EEF1FE;
+  --color-primary-dark:   #3550D4;
+  --color-success:        #22C55E;
+  --color-success-light:  #DCFCE7;
+  --color-warning:        #F59E0B;
+  --color-warning-light:  #FEF3C7;
+  --color-danger:         #EF4444;
+  --color-danger-light:   #FEE2E2;
+  --color-neutral:        #94A3B8;
+  --color-neutral-light:  #F1F5F9;
+
+  --color-bg:             #F0F4F8;
+  --color-surface:        #FFFFFF;
+  --color-surface-2:      #F8FAFC;
+  --color-border:         #E2E8F0;
+  --color-border-dark:    #CBD5E1;
+
+  --color-text-primary:   #1E293B;
+  --color-text-secondary: #64748B;
+  --color-text-muted:     #94A3B8;
+
+  /* ステータスカラー */
+  --status-not-started-bg:   #F1F5F9;
+  --status-not-started-text: #475569;
+  --status-in-progress-bg:   #EEF1FE;
+  --status-in-progress-text: #4F6EF7;
+  --status-completed-bg:     #DCFCE7;
+  --status-completed-text:   #15803D;
+
+  /* 優先度カラー */
+  --priority-high-bg:    #FEE2E2;
+  --priority-high-text:  #DC2626;
+  --priority-medium-bg:  #FEF3C7;
+  --priority-medium-text:#D97706;
+  --priority-low-bg:     #F1F5F9;
+  --priority-low-text:   #475569;
+
+  /* ガントバーカラー */
+  --bar-high-not-started:   #FCA5A5;
+  --bar-high-in-progress:   #EF4444;
+  --bar-high-completed:     #22C55E;
+  --bar-medium-not-started: #93C5FD;
+  --bar-medium-in-progress: #3B82F6;
+  --bar-medium-completed:   #22C55E;
+  --bar-low-not-started:    #CBD5E1;
+  --bar-low-in-progress:    #64748B;
+  --bar-low-completed:      #22C55E;
+
+  /* タイポグラフィ */
+  --font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+  --font-size-xs:  11px;
+  --font-size-sm:  12px;
+  --font-size-md:  14px;
+  --font-size-lg:  16px;
+  --font-size-xl:  20px;
+  --font-size-2xl: 24px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold:   600;
+
+  /* スペーシング */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* シャドウ */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
+  --shadow-xl: 0 20px 48px rgba(0,0,0,0.16);
+
+  /* ボーダーラジウス */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ガントチャート固有 */
+  --gantt-row-height:      44px;
+  --gantt-header-height:   52px;
+  --gantt-task-col-width:  240px;
+  --gantt-cell-width-week: 44px;
+  --gantt-cell-width-month:30px;
+
+  /* トランジション */
+  --transition-fast:   0.1s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow:   0.3s ease;
+
+  /* サイドバー */
+  --sidebar-width: 220px;
+  --header-height: 60px;
+}
