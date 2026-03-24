@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ガントチャート TODO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/gantt.css">
+  <link rel="stylesheet" href="css/todo.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ========== ヘッダー ========== -->
+  <header id="header">
+    <div class="header-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <line x1="8" y1="14" x2="16" y2="14"/>
+        <line x1="8" y1="18" x2="13" y2="18"/>
+      </svg>
+      ガントチャート TODO
+    </div>
+
+    <!-- ビュー切替 -->
+    <div class="header-view-switcher">
+      <button class="view-btn" data-view="gantt">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="3" rx="1"/>
+          <rect x="3" y="10" width="12" height="3" rx="1"/>
+          <rect x="3" y="16" width="15" height="3" rx="1"/>
+        </svg>
+        ガントチャート
+      </button>
+      <button class="view-btn" data-view="todo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        TODOリスト
+      </button>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <!-- タスク追加 -->
+    <button class="btn btn-primary" id="add-task-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      タスクを追加
+    </button>
+  </header>
+
+  <!-- ========== サイドバー ========== -->
+  <aside id="sidebar">
+
+    <!-- ステータスフィルター -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">ステータス</div>
+
+      <div class="sidebar-filter-item" data-filter-status="all">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/>
+        </svg>
+        すべて
+        <span class="sidebar-filter-count">0</span>
+      </div>
+
+      <div class="sidebar-filter-item" data-filter-status="not_started">
+        <span class="sidebar-filter-dot" style="background:var(--color-neutral)"></span>
+        未着手
+        <span class="sidebar-filter-count">0</span>
+      </div>
+
+      <div class="sidebar-filter-item" data-filter-status="in_progress">
+        <span class="sidebar-filter-dot" style="background:var(--color-primary)"></span>
+        進行中
+        <span class="sidebar-filter-count">0</span>
+      </div>
+
+      <div class="sidebar-filter-item" data-filter-status="completed">
+        <span class="sidebar-filter-dot" style="background:var(--color-success)"></span>
+        完了
+        <span class="sidebar-filter-count">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- 優先度フィルター -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">優先度</div>
+
+      <div class="sidebar-filter-item" data-filter-priority="all">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/>
+        </svg>
+        すべて
+        <span class="sidebar-filter-count">0</span>
+      </div>
+
+      <div class="sidebar-filter-item" data-filter-priority="high">
+        <span class="sidebar-filter-dot" style="background:var(--color-danger)"></span>
+        高
+        <span class="sidebar-filter-count">0</span>
+      </div>
+
+      <div class="sidebar-filter-item" data-filter-priority="medium">
+        <span class="sidebar-filter-dot" style="background:var(--color-warning)"></span>
+        中
+        <span class="sidebar-filter-count">0</span>
+      </div>
+
+      <div class="sidebar-filter-item" data-filter-priority="low">
+        <span class="sidebar-filter-dot" style="background:var(--color-neutral)"></span>
+        低
+        <span class="sidebar-filter-count">0</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ========== メインエリア ========== -->
+  <main id="main">
+
+    <!-- ツールバー -->
+    <div id="toolbar">
+
+      <!-- ガントチャートツールバー -->
+      <div id="gantt-toolbar" class="toolbar-group" style="display:flex; flex:1; gap:8px; align-items:center; flex-wrap:wrap;">
+        <!-- スケール切替 -->
+        <div style="display:flex; gap:4px; background:var(--color-surface-2); border:1px solid var(--color-border); border-radius:var(--radius-md); padding:3px;">
+          <button class="scale-btn" data-scale="week">週</button>
+          <button class="scale-btn" data-scale="month">月</button>
+        </div>
+
+        <!-- ナビゲーション -->
+        <button class="nav-btn" id="gantt-prev" data-tooltip="前へ">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <button class="btn btn-secondary btn-sm" id="gantt-today">今日</button>
+        <button class="nav-btn" id="gantt-next" data-tooltip="次へ">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+        <span class="nav-range-label" id="gantt-range-label"></span>
+
+        <div class="toolbar-spacer"></div>
+
+        <!-- フィルター -->
+        <span class="toolbar-label">フィルター：</span>
+        <select class="filter-select" id="filter-status">
+          <option value="all">ステータス：すべて</option>
+          <option value="not_started">未着手</option>
+          <option value="in_progress">進行中</option>
+          <option value="completed">完了</option>
+        </select>
+        <select class="filter-select" id="filter-priority">
+          <option value="all">優先度：すべて</option>
+          <option value="high">高</option>
+          <option value="medium">中</option>
+          <option value="low">低</option>
+        </select>
+      </div>
+
+      <!-- TODOツールバー -->
+      <div id="todo-toolbar" class="toolbar-group" style="display:none; flex:1; gap:8px; align-items:center; flex-wrap:wrap;">
+        <span class="sort-label">並べ替え：</span>
+        <button class="sort-btn" data-sort="startDate">
+          開始日 <span class="sort-arrow">↑</span>
+        </button>
+        <button class="sort-btn" data-sort="endDate">
+          終了日 <span class="sort-arrow">↑</span>
+        </button>
+        <button class="sort-btn" data-sort="priority">
+          優先度 <span class="sort-arrow">↑</span>
+        </button>
+        <button class="sort-btn" data-sort="status">
+          ステータス <span class="sort-arrow">↑</span>
+        </button>
+        <button class="sort-btn" data-sort="name">
+          名前 <span class="sort-arrow">↑</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- コンテンツ -->
+    <div id="content">
+
+      <!-- ガントチャートビュー -->
+      <div id="gantt-view" class="view-panel">
+        <div class="gantt-container">
+
+          <!-- タスク名列（固定） -->
+          <div class="gantt-task-col">
+            <div class="gantt-task-col-header">タスク名</div>
+            <div id="gantt-task-list" class="gantt-task-list"></div>
+          </div>
+
+          <!-- スクロール可能エリア -->
+          <div id="gantt-scroll-area" class="gantt-scroll-area">
+            <div class="gantt-grid">
+              <div id="gantt-date-header" class="gantt-date-header"></div>
+              <div id="gantt-body" class="gantt-body"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TODOリストビュー -->
+      <div id="todo-view" class="view-panel">
+        <div class="todo-scroll">
+
+          <!-- 進捗サマリー -->
+          <div class="todo-progress-section" id="todo-progress">
+            <span class="todo-progress-label">完了 0 / 0 タスク</span>
+            <div class="todo-progress-bar-wrap">
+              <div class="todo-progress-bar" style="width:0%"></div>
+            </div>
+            <span class="todo-progress-pct">0%</span>
+          </div>
+
+          <!-- タスクリスト -->
+          <div id="todo-list" class="todo-list"></div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div><!-- #app -->
+
+<!-- ========== タスク追加・編集モーダル ========== -->
+<div class="modal-overlay" id="task-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">タスクを追加</h2>
+      <button class="modal-close" id="modal-close-btn" aria-label="閉じる">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <form id="task-form" novalidate>
+      <div class="modal-body">
+
+        <!-- タスク名 -->
+        <div class="form-group">
+          <label class="form-label" for="field-name">
+            タスク名<span class="form-required">*</span>
+          </label>
+          <input
+            type="text"
+            id="field-name"
+            class="form-input"
+            placeholder="例：フロントエンド実装"
+            maxlength="100"
+            autocomplete="off"
+          >
+        </div>
+
+        <!-- 開始日・終了日 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="field-start-date">
+              開始日<span class="form-required">*</span>
+            </label>
+            <input type="date" id="field-start-date" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-end-date">
+              終了日<span class="form-required">*</span>
+            </label>
+            <input type="date" id="field-end-date" class="form-input">
+          </div>
+        </div>
+
+        <!-- ステータス・優先度 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="field-status">ステータス</label>
+            <select id="field-status" class="form-input form-input-select">
+              <option value="not_started">未着手</option>
+              <option value="in_progress">進行中</option>
+              <option value="completed">完了</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-priority">優先度</label>
+            <select id="field-priority" class="form-input form-input-select">
+              <option value="high">高</option>
+              <option value="medium">中</option>
+              <option value="low">低</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 担当者 -->
+        <div class="form-group">
+          <label class="form-label" for="field-assignee">担当者（任意）</label>
+          <input
+            type="text"
+            id="field-assignee"
+            class="form-input"
+            placeholder="例：山田太郎"
+            maxlength="50"
+            autocomplete="off"
+          >
+        </div>
+
+        <!-- 説明 -->
+        <div class="form-group">
+          <label class="form-label" for="field-description">説明（任意）</label>
+          <textarea
+            id="field-description"
+            class="form-input form-textarea"
+            placeholder="タスクの詳細・備考"
+            maxlength="500"
+            rows="3"
+          ></textarea>
+        </div>
+
+      </div><!-- .modal-body -->
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="modal-cancel-btn">キャンセル</button>
+        <button type="submit" class="btn btn-primary">保存する</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- トースト通知 -->
+<div id="toast-container"></div>
+
+<!-- スクリプト（依存順） -->
+<script src="js/store.js"></script>
+<script src="js/filter.js"></script>
+<script src="js/app.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/gantt.js"></script>
+<script src="js/todo.js"></script>
+
+</body>
+</html>
